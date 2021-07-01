@@ -25,6 +25,19 @@ namespace ManagerFile
             this.hideForm = hideForm;
         }
 
+        private void SettingsLoad()
+        {
+            settings = Settings.Load();
+            textBoxPathScan.Text = settings.PathScan;
+            textBoxPathSave.Text = settings.PathSave;
+            numericUpDown1.Value = settings.Interval / 1000 / 60;
+            checkBoxSaveJurnal.Checked = settings.SaveJournal;
+            LoadJournal();
+            Microsoft.Win32.RegistryKey Key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", true);
+            checkBoxAutoRun.Checked = Key.GetValue(Application.ProductName) != null;
+            Key.Close();
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             if (hideForm)
@@ -36,18 +49,7 @@ namespace ManagerFile
             {
                 this.Opacity = 100;
             }
-          
-            settings = Settings.Load();
-            textBoxPathScan.Text = settings.PathScan;
-            textBoxPathSave.Text = settings.PathSave;
-            numericUpDown1.Value = settings.Interval / 1000 / 60;
-            checkBoxSaveJurnal.Checked = settings.SaveJournal;
-            LoadJournal();
-
-            //Удаляем запись из реестра
-            Microsoft.Win32.RegistryKey Key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", true);
-            checkBoxAutoRun.Checked = Key.GetValue(Application.ProductName) != null;
-            Key.Close();
+            SettingsLoad();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -325,6 +327,7 @@ namespace ManagerFile
 
         private void timerGetFiles_Tick(object sender, EventArgs e)
         {
+            SettingsLoad();
             copyAndDelete = true;
             thread = new Thread(CopyFiles);
             thread.Start();
