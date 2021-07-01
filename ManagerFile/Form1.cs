@@ -16,13 +16,25 @@ namespace ManagerFile
     {
         private Settings settings = null;
         private Thread thread = null;
-        public Form1()
+        private bool hideForm = false;
+        public Form1(bool hideForm = false)
         {
             InitializeComponent();
+            this.hideForm = hideForm;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (hideForm)
+            {
+                this.Hide();
+                this.ShowInTaskbar = false;
+            }
+            else
+            {
+                this.Opacity = 100;
+            }
+          
             settings = Settings.Load();
             textBoxPathScan.Text = settings.PathScan;
             textBoxPathSave.Text = settings.PathSave;
