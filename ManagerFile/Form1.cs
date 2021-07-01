@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IWshRuntimeLibrary;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,7 @@ namespace ManagerFile
         private Settings settings = null;
         private Thread thread = null;
         private bool hideForm = false;
+        private bool copyAndDelete = false;
         public Form1(bool hideForm = false)
         {
             InitializeComponent();
@@ -38,6 +40,14 @@ namespace ManagerFile
             settings = Settings.Load();
             textBoxPathScan.Text = settings.PathScan;
             textBoxPathSave.Text = settings.PathSave;
+            numericUpDown1.Value = settings.Interval / 1000 / 60;
+            checkBoxSaveJurnal.Checked = settings.SaveJournal;
+            LoadJournal();
+
+            //Удаляем запись из реестра
+            Microsoft.Win32.RegistryKey Key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", true);
+            checkBoxAutoRun.Checked = Key.GetValue(Application.ProductName) != null;
+            Key.Close();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -54,7 +64,7 @@ namespace ManagerFile
         {
             Invoke((MethodInvoker)delegate
             {
-                RTextJournal.AppendText($"{DateTime.Now.ToString("dd.MM.yy ")}{DateTime.Now.ToLongTimeString()}:{text}{"\n"}");
+                RTextJournal.AppendText($"{DateTime.Now.ToString("dd.MM.yy")}{DateTime.Now.ToLongTimeString()}:{text}{"\n"}");
             });
         }
 
@@ -66,7 +76,7 @@ namespace ManagerFile
         {
             Invoke((MethodInvoker)delegate
             {
-                RTextJournal.AppendText($"{"\n"}**********************{textHeading}**********************{"\n"}");
+                RTextJournal.AppendText($"{"\n"}{DateTime.Now.ToString("dd.MM.yy")}{DateTime.Now.ToLongTimeString()}:{textHeading}**********************{"\n"}");
             });
         }
 
@@ -78,7 +88,7 @@ namespace ManagerFile
         {
             Invoke((MethodInvoker)delegate
             {
-                RTextJournal.AppendText($"----------------------{textFooter}----------------------{"\n"}");
+                RTextJournal.AppendText($"{DateTime.Now.ToString("dd.MM.yy")}{DateTime.Now.ToLongTimeString()}:{textFooter}----------------------{"\n"}");
             });
         }
 
@@ -101,7 +111,8 @@ namespace ManagerFile
             {
                 AddText(file);
             }
-            UnLockButtons("Получени списка файлов закончено");
+            UnLockButtons("Получение списка файлов закончено");
+            SaveJournal();
         }
 
         private List<string> GetFiles()
@@ -169,7 +180,9 @@ namespace ManagerFile
         private void CopyFiles()
         {
             string path = string.Empty;
+            bool checkError = false;
             LockButtons("Копирование файлов");
+
             Invoke((MethodInvoker)delegate
             {
                 path = textBoxPathSave.Text;
@@ -180,13 +193,13 @@ namespace ManagerFile
                 try
                 {
                     string copePath = Path.Combine(path, Path.GetFileName(file));
-                    bool fileExists = File.Exists(copePath);
+                    bool fileExists = System.IO.File.Exists(copePath);
                     int num = 2;
                     while (fileExists)
                     {
                         string newFile = $"{Path.GetFileNameWithoutExtension(copePath)}({num}){Path.GetExtension(copePath)}";
                         string newPath = Path.Combine(path, newFile);
-                        if (File.Exists(newPath))
+                        if (System.IO.File.Exists(newPath))
                             num++;
                         else
                         {
@@ -196,18 +209,32 @@ namespace ManagerFile
                     }
 
                     AddText($"Копирование файла - {Path.GetFileName(file)} -> {Path.GetFileName(copePath)}");
-                    File.Copy(file, copePath);
+                    System.IO.File.Copy(file, copePath);
                 }
                 catch (Exception ex)
                 {
+                    checkError = true;
                     Invoke((MethodInvoker)delegate
                     {
                         AddError(ex.Message);
                     });
                 }
             }
-
             UnLockButtons("Копирование файлов закончено");
+            SaveJournal();
+            if (copyAndDelete)
+            {
+                if (!checkError)
+                {
+                    thread = new Thread(DeleteFiles);
+                    thread.Start();
+                }
+                else
+                {
+                    AddError("Возникли ошибки при копировании с целью сохранения данных удаление файлов не было запущено");
+                }
+            }
+            copyAndDelete = false;
         }
 
         private void DeleteFiles()
@@ -218,7 +245,7 @@ namespace ManagerFile
                 try
                 {
                     AddText($"Удаление файла - {Path.GetFileName(file)}");
-                    File.Delete(file);
+                    System.IO.File.Delete(file);
                 }
                 catch (Exception ex)
                 {
@@ -226,6 +253,7 @@ namespace ManagerFile
                 }
             }
             UnLockButtons("Удаление файлов закончено");
+            SaveJournal();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -257,6 +285,91 @@ namespace ManagerFile
         {
             settings.PathSave = textBoxPathSave.Text;
             settings.Save();
+        }
+
+        private void SaveJournal()
+        {
+            try
+            {
+                if (settings.SaveJournal)
+                {
+                    AddText("Запись в журнал");
+                    Invoke((MethodInvoker)delegate
+                    {
+                        RTextJournal.SaveFile(Path.Combine(settings.PathSave, $"JournalManagerFile от {DateTime.Now.ToString("dd.MM.yy")}.rtf"));
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                AddError(ex.Message);
+            }
+        }
+
+        private void LoadJournal()
+        {
+            try
+            {
+                if (settings.SaveJournal)
+                {
+                    Invoke((MethodInvoker)delegate
+                    {
+                        RTextJournal.LoadFile(Path.Combine(settings.PathSave, $"JournalManagerFile от {DateTime.Now.ToString("dd.MM.yy")}.rtf"));
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void timerGetFiles_Tick(object sender, EventArgs e)
+        {
+            copyAndDelete = true;
+            thread = new Thread(CopyFiles);
+            thread.Start();
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            settings.Interval = (int)(numericUpDown1.Value * 60 * 1000);
+            timerGetFiles.Interval = settings.Interval;
+            settings.Save();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            settings.SaveJournal = checkBoxSaveJurnal.Checked;
+            settings.Save();
+        }
+
+        private void checkBoxAutoRun_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAutoRun.Checked)
+            {
+                string shortCutPath = Path.Combine(Environment.CurrentDirectory, $"{Application.ProductName}.lnk"); 
+                                                                                                     
+                WshShell shell = new WshShell();
+                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortCutPath);
+                shortcut.Arguments = "hideForm";
+                shortcut.Hotkey = "Ctrl+Shift+M";
+                shortcut.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                shortcut.WorkingDirectory = Environment.CurrentDirectory;
+                // Создаем ярлык
+                shortcut.Save();
+                // Добавляем запись в реестр
+                Microsoft.Win32.RegistryKey Key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", true);
+                Key.SetValue(Application.ProductName, shortCutPath);
+                Key.Close();
+            }
+            else
+            {
+                //Удаляем запись из реестра
+                Microsoft.Win32.RegistryKey Key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", true);
+                Key.DeleteValue(Application.ProductName, false);
+                Key.Close();
+            }
+           
         }
     }
 }

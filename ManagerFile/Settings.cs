@@ -15,7 +15,17 @@ namespace ManagerFile
         /// <summary>
         /// Путь для сохранения файлов
         /// </summary>
-        public string PathSave { get; set; }
+        public string PathSave { get; set; } 
+        
+        /// <summary>
+        /// Интервал сканирования данных
+        /// </summary>
+        public int Interval { get; set; }
+        
+        /// <summary>
+        /// Сохранять журнал
+        /// </summary>
+        public bool SaveJournal { get; set; }
 
         /// <summary>
         /// Сохранить настройки
@@ -59,6 +69,8 @@ namespace ManagerFile
             Settings settings = new Settings();
             settings.PathSave = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             settings.PathScan = null;
+            settings.Interval = 300000;
+            settings.SaveJournal = false;
             settings.Save();
             return settings;
         }
