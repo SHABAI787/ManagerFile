@@ -28,28 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxPathFiles = new System.Windows.Forms.TextBox();
+            this.textBoxPathScan = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxPathSave = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.richTextBoxText = new System.Windows.Forms.RichTextBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.RTextJournal = new System.Windows.Forms.RichTextBox();
+            this.buttonGetFiles = new System.Windows.Forms.Button();
+            this.buttonCopyFiles = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonPathSave = new System.Windows.Forms.Button();
+            this.buttonPathScan = new System.Windows.Forms.Button();
+            this.buttonDeleteFiles = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBoxPathFiles
+            // textBoxPathScan
             // 
-            this.textBoxPathFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxPathScan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPathFiles.Location = new System.Drawing.Point(14, 49);
-            this.textBoxPathFiles.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.textBoxPathFiles.Name = "textBoxPathFiles";
-            this.textBoxPathFiles.Size = new System.Drawing.Size(758, 29);
-            this.textBoxPathFiles.TabIndex = 1;
-            this.textBoxPathFiles.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBoxPathScan.Location = new System.Drawing.Point(14, 49);
+            this.textBoxPathScan.Margin = new System.Windows.Forms.Padding(5);
+            this.textBoxPathScan.Name = "textBoxPathScan";
+            this.textBoxPathScan.Size = new System.Drawing.Size(1015, 29);
+            this.textBoxPathScan.TabIndex = 1;
+            this.textBoxPathScan.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
@@ -67,8 +68,9 @@
             this.textBoxPathSave.Location = new System.Drawing.Point(14, 109);
             this.textBoxPathSave.Margin = new System.Windows.Forms.Padding(5);
             this.textBoxPathSave.Name = "textBoxPathSave";
-            this.textBoxPathSave.Size = new System.Drawing.Size(758, 29);
+            this.textBoxPathSave.Size = new System.Drawing.Size(1015, 29);
             this.textBoxPathSave.TabIndex = 3;
+            this.textBoxPathSave.TextChanged += new System.EventHandler(this.textBoxPathSave_TextChanged);
             // 
             // label2
             // 
@@ -79,101 +81,114 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Путь для сохранения";
             // 
-            // richTextBoxText
+            // RTextJournal
             // 
-            this.richTextBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.RTextJournal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxText.Location = new System.Drawing.Point(16, 189);
-            this.richTextBoxText.Name = "richTextBoxText";
-            this.richTextBoxText.Size = new System.Drawing.Size(813, 285);
-            this.richTextBoxText.TabIndex = 6;
-            this.richTextBoxText.Text = "";
+            this.RTextJournal.Location = new System.Drawing.Point(16, 189);
+            this.RTextJournal.Name = "RTextJournal";
+            this.RTextJournal.Size = new System.Drawing.Size(1070, 285);
+            this.RTextJournal.TabIndex = 6;
+            this.RTextJournal.Text = "";
             // 
-            // button3
+            // buttonGetFiles
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Location = new System.Drawing.Point(16, 148);
-            this.button3.Margin = new System.Windows.Forms.Padding(5);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(243, 29);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Получить список файлов";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.buttonGetFiles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonGetFiles.Location = new System.Drawing.Point(16, 148);
+            this.buttonGetFiles.Margin = new System.Windows.Forms.Padding(5);
+            this.buttonGetFiles.Name = "buttonGetFiles";
+            this.buttonGetFiles.Size = new System.Drawing.Size(243, 29);
+            this.buttonGetFiles.TabIndex = 7;
+            this.buttonGetFiles.Text = "Получить список файлов";
+            this.buttonGetFiles.UseVisualStyleBackColor = true;
+            this.buttonGetFiles.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button4
+            // buttonCopyFiles
             // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4.Location = new System.Drawing.Point(269, 148);
-            this.button4.Margin = new System.Windows.Forms.Padding(5);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(243, 29);
-            this.button4.TabIndex = 8;
-            this.button4.Text = "Копировать";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.buttonCopyFiles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonCopyFiles.Location = new System.Drawing.Point(269, 148);
+            this.buttonCopyFiles.Margin = new System.Windows.Forms.Padding(5);
+            this.buttonCopyFiles.Name = "buttonCopyFiles";
+            this.buttonCopyFiles.Size = new System.Drawing.Size(243, 29);
+            this.buttonCopyFiles.TabIndex = 8;
+            this.buttonCopyFiles.Text = "Копировать";
+            this.buttonCopyFiles.UseVisualStyleBackColor = true;
+            this.buttonCopyFiles.Click += new System.EventHandler(this.button4_Click);
             // 
             // checkBox1
             // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(673, 152);
+            this.checkBox1.Location = new System.Drawing.Point(930, 152);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(154, 25);
             this.checkBox1.TabIndex = 9;
             this.checkBox1.Text = "Автозапуск ПО";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // buttonPathSave
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.BackgroundImage = global::ManagerFile.Properties.Resources.save_go;
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(771, 109);
-            this.button2.Margin = new System.Windows.Forms.Padding(5);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(56, 29);
-            this.button2.TabIndex = 5;
-            this.button2.Text = " ";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonPathSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPathSave.BackgroundImage = global::ManagerFile.Properties.Resources.save_go;
+            this.buttonPathSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.buttonPathSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonPathSave.Location = new System.Drawing.Point(1028, 109);
+            this.buttonPathSave.Margin = new System.Windows.Forms.Padding(5);
+            this.buttonPathSave.Name = "buttonPathSave";
+            this.buttonPathSave.Size = new System.Drawing.Size(56, 29);
+            this.buttonPathSave.TabIndex = 5;
+            this.buttonPathSave.Text = " ";
+            this.buttonPathSave.UseVisualStyleBackColor = true;
+            this.buttonPathSave.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button1
+            // buttonPathScan
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.BackgroundImage = global::ManagerFile.Properties.Resources.vision;
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(771, 49);
-            this.button1.Margin = new System.Windows.Forms.Padding(5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(56, 29);
-            this.button1.TabIndex = 0;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonPathScan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPathScan.BackgroundImage = global::ManagerFile.Properties.Resources.vision;
+            this.buttonPathScan.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.buttonPathScan.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonPathScan.Location = new System.Drawing.Point(1028, 49);
+            this.buttonPathScan.Margin = new System.Windows.Forms.Padding(5);
+            this.buttonPathScan.Name = "buttonPathScan";
+            this.buttonPathScan.Size = new System.Drawing.Size(56, 29);
+            this.buttonPathScan.TabIndex = 0;
+            this.buttonPathScan.UseVisualStyleBackColor = true;
+            this.buttonPathScan.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // buttonDeleteFiles
+            // 
+            this.buttonDeleteFiles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonDeleteFiles.Location = new System.Drawing.Point(522, 149);
+            this.buttonDeleteFiles.Margin = new System.Windows.Forms.Padding(5);
+            this.buttonDeleteFiles.Name = "buttonDeleteFiles";
+            this.buttonDeleteFiles.Size = new System.Drawing.Size(243, 29);
+            this.buttonDeleteFiles.TabIndex = 10;
+            this.buttonDeleteFiles.Text = "Удалить";
+            this.buttonDeleteFiles.UseVisualStyleBackColor = true;
+            this.buttonDeleteFiles.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(841, 486);
+            this.ClientSize = new System.Drawing.Size(1098, 486);
+            this.Controls.Add(this.buttonDeleteFiles);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.richTextBoxText);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.buttonCopyFiles);
+            this.Controls.Add(this.buttonGetFiles);
+            this.Controls.Add(this.RTextJournal);
+            this.Controls.Add(this.buttonPathSave);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxPathSave);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBoxPathFiles);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.textBoxPathScan);
+            this.Controls.Add(this.buttonPathScan);
             this.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "Form1";
             this.Text = "Files";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -182,16 +197,17 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBoxPathFiles;
+        private System.Windows.Forms.Button buttonPathScan;
+        private System.Windows.Forms.TextBox textBoxPathScan;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxPathSave;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.RichTextBox richTextBoxText;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonPathSave;
+        private System.Windows.Forms.RichTextBox RTextJournal;
+        private System.Windows.Forms.Button buttonGetFiles;
+        private System.Windows.Forms.Button buttonCopyFiles;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button buttonDeleteFiles;
     }
 }
 

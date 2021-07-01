@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,6 +14,8 @@ namespace ManagerFile
 {
     public partial class Form1 : Form
     {
+        private Settings settings = null;
+        private Thread thread = null;
         public Form1()
         {
             InitializeComponent();
@@ -20,31 +23,96 @@ namespace ManagerFile
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            settings = Settings.Load();
+            textBoxPathScan.Text = settings.PathScan;
+            textBoxPathSave.Text = settings.PathSave;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            settings.PathScan = textBoxPathScan.Text;
+            settings.Save();
+        }
 
+        /// <summary>
+        /// Добавить текст
+        /// </summary>
+        /// <param name="text"></param>
+        private void AddText(string text)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                RTextJournal.AppendText($"{DateTime.Now.ToString("dd.MM.yy ")}{DateTime.Now.ToLongTimeString()}:{text}{"\n"}");
+            });
+        }
+
+        /// <summary>
+        /// Добавить заголовок
+        /// </summary>
+        /// <param name="textHeading"></param>
+        private void AddHeader(string textHeading)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                RTextJournal.AppendText($"{"\n"}**********************{textHeading}**********************{"\n"}");
+            });
+        }
+
+        /// <summary>
+        /// Добавить Footer
+        /// </summary>
+        /// <param name="textFooter"></param>
+        private void AddFooter(string textFooter)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                RTextJournal.AppendText($"----------------------{textFooter}----------------------{"\n"}");
+            });
+        }
+
+        /// <summary>
+        /// Добавить описание ошибки
+        /// </summary>
+        /// <param name="textError"></param>
+        private void AddError(string textError)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                AddText($"ОШИБКА - {textError}");
+            });
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            LockButtons("Получение списка файлов");
             foreach (var file in GetFiles())
             {
-                richTextBoxText.AppendText(file + "\n");
+                AddText(file);
             }
+            UnLockButtons("Получени списка файлов закончено");
         }
 
         private List<string> GetFiles()
         {
-            List<string> result = new List<string>();
-            foreach (var files in Directory.GetFiles(textBoxPathFiles.Text))
+            string path = string.Empty;
+            Invoke((MethodInvoker)delegate
             {
-                result.Add(files);
-                
-            }
+                path = textBoxPathScan.Text;
+            });
 
+            List<string> result = new List<string>();
+            try
+            {
+                foreach (var files in Directory.GetFiles(path))
+                {
+                    result.Add(files);
+                }
+            }
+            catch (Exception ex)
+            {
+                AddError(ex.Message);
+            }
+         
             return result;
         }
 
@@ -54,17 +122,98 @@ namespace ManagerFile
             saveFileDialog.FileName = "Путь";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                textBoxPathFiles.Text = Path.GetDirectoryName(saveFileDialog.FileName);
+                textBoxPathScan.Text = Path.GetDirectoryName(saveFileDialog.FileName);
             }
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            thread = new Thread(CopyFiles);
+            thread.Start();
+        }
+
+        private void LockButtons(string text)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                buttonCopyFiles.Enabled = false;
+                buttonGetFiles.Enabled = false;
+                buttonDeleteFiles.Enabled = false;
+                AddHeader(text);
+            });
+        }
+
+        private void UnLockButtons(string text)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                buttonCopyFiles.Enabled = true;
+                buttonGetFiles.Enabled = true;
+                buttonDeleteFiles.Enabled = true;
+                AddFooter(text);
+            });
+        }
+
+        private void CopyFiles()
+        {
+            string path = string.Empty;
+            LockButtons("Копирование файлов");
+            Invoke((MethodInvoker)delegate
+            {
+                path = textBoxPathSave.Text;
+            });
+
             foreach (var file in GetFiles())
             {
-                string copePath = Path.Combine(textBoxPathSave.Text, Path.GetFileName(file));
-                File.Copy(file, copePath);
+                try
+                {
+                    string copePath = Path.Combine(path, Path.GetFileName(file));
+                    bool fileExists = File.Exists(copePath);
+                    int num = 2;
+                    while (fileExists)
+                    {
+                        string newFile = $"{Path.GetFileNameWithoutExtension(copePath)}({num}){Path.GetExtension(copePath)}";
+                        string newPath = Path.Combine(path, newFile);
+                        if (File.Exists(newPath))
+                            num++;
+                        else
+                        {
+                            copePath = newPath;
+                            fileExists = false;
+                        }
+                    }
+
+                    AddText($"Копирование файла - {Path.GetFileName(file)} -> {Path.GetFileName(copePath)}");
+                    File.Copy(file, copePath);
+                }
+                catch (Exception ex)
+                {
+                    Invoke((MethodInvoker)delegate
+                    {
+                        AddError(ex.Message);
+                    });
+                }
             }
+
+            UnLockButtons("Копирование файлов закончено");
+        }
+
+        private void DeleteFiles()
+        {
+            LockButtons("Запущено удаление файлов");
+            foreach (var file in GetFiles())
+            {
+                try
+                {
+                    AddText($"Удаление файла - {Path.GetFileName(file)}");
+                    File.Delete(file);
+                }
+                catch (Exception ex)
+                {
+                    AddError(ex.Message);
+                }
+            }
+            UnLockButtons("Удаление файлов закончено");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -74,8 +223,28 @@ namespace ManagerFile
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 textBoxPathSave.Text = saveFileDialog.FileName;
-                Directory.CreateDirectory(textBoxPathSave.Text);
             }
+        }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show($"Удалить все файлы по пути : {textBoxPathScan.Text}", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                thread = new Thread(DeleteFiles);
+                thread.Start();
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(thread != null)
+                thread.Abort();
+        }
+
+        private void textBoxPathSave_TextChanged(object sender, EventArgs e)
+        {
+            settings.PathSave = textBoxPathSave.Text;
+            settings.Save();
         }
     }
 }
