@@ -29,8 +29,7 @@ namespace ManagerFile
         {
             settings = Settings.Load();
             textBoxPathScan.Text = settings.PathScan;
-            textBoxPathSave.Text = settings.PathSave;
-            numericUpDown1.Value = settings.Interval / 1000 / 60;
+            numericUpDown1.Value = settings.Interval / 1000;
             checkBoxSaveJurnal.Checked = settings.SaveJournal;
             LoadJournal();
             Microsoft.Win32.RegistryKey Key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\", true);
@@ -153,15 +152,12 @@ namespace ManagerFile
 
         private void button4_Click(object sender, EventArgs e)
         {
-            thread = new Thread(CopyFiles);
-            thread.Start();
         }
 
         private void LockButtons(string text)
         {
             Invoke((MethodInvoker)delegate
             {
-                buttonCopyFiles.Enabled = false;
                 buttonGetFiles.Enabled = false;
                 buttonDeleteFiles.Enabled = false;
                 AddHeader(text);
@@ -172,71 +168,10 @@ namespace ManagerFile
         {
             Invoke((MethodInvoker)delegate
             {
-                buttonCopyFiles.Enabled = true;
                 buttonGetFiles.Enabled = true;
                 buttonDeleteFiles.Enabled = true;
                 AddFooter(text);
             });
-        }
-
-        private void CopyFiles()
-        {
-            string path = string.Empty;
-            bool checkError = false;
-            LockButtons("Копирование файлов");
-
-            Invoke((MethodInvoker)delegate
-            {
-                path = textBoxPathSave.Text;
-            });
-
-            foreach (var file in GetFiles())
-            {
-                try
-                {
-                    string copePath = Path.Combine(path, Path.GetFileName(file));
-                    bool fileExists = System.IO.File.Exists(copePath);
-                    int num = 2;
-                    while (fileExists)
-                    {
-                        string newFile = $"{Path.GetFileNameWithoutExtension(copePath)}({num}){Path.GetExtension(copePath)}";
-                        string newPath = Path.Combine(path, newFile);
-                        if (System.IO.File.Exists(newPath))
-                            num++;
-                        else
-                        {
-                            copePath = newPath;
-                            fileExists = false;
-                        }
-                    }
-
-                    AddText($"Копирование файла - {Path.GetFileName(file)} -> {Path.GetFileName(copePath)}");
-                    System.IO.File.Copy(file, copePath);
-                }
-                catch (Exception ex)
-                {
-                    checkError = true;
-                    Invoke((MethodInvoker)delegate
-                    {
-                        AddError(ex.Message);
-                    });
-                }
-            }
-            UnLockButtons("Копирование файлов закончено");
-            SaveJournal();
-            if (copyAndDelete)
-            {
-                if (!checkError)
-                {
-                    thread = new Thread(DeleteFiles);
-                    thread.Start();
-                }
-                else
-                {
-                    AddError("Возникли ошибки при копировании с целью сохранения данных удаление файлов не было запущено");
-                }
-            }
-            copyAndDelete = false;
         }
 
         private void DeleteFiles()
@@ -260,12 +195,7 @@ namespace ManagerFile
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = "Новая папка";
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                textBoxPathSave.Text = saveFileDialog.FileName;
-            }
+        
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -285,8 +215,6 @@ namespace ManagerFile
 
         private void textBoxPathSave_TextChanged(object sender, EventArgs e)
         {
-            settings.PathSave = textBoxPathSave.Text;
-            settings.Save();
         }
 
         private void SaveJournal()
@@ -329,13 +257,13 @@ namespace ManagerFile
         {
             SettingsLoad();
             copyAndDelete = true;
-            thread = new Thread(CopyFiles);
+            thread = new Thread(DeleteFiles);
             thread.Start();
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            settings.Interval = (int)(numericUpDown1.Value * 60 * 1000);
+            settings.Interval = (int)(numericUpDown1.Value * 1000);
             timerGetFiles.Interval = settings.Interval;
             settings.Save();
         }

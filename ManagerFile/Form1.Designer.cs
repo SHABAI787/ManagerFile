@@ -31,13 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.textBoxPathScan = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxPathSave = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.RTextJournal = new System.Windows.Forms.RichTextBox();
             this.buttonGetFiles = new System.Windows.Forms.Button();
-            this.buttonCopyFiles = new System.Windows.Forms.Button();
             this.checkBoxAutoRun = new System.Windows.Forms.CheckBox();
-            this.buttonPathSave = new System.Windows.Forms.Button();
             this.buttonPathScan = new System.Windows.Forms.Button();
             this.buttonDeleteFiles = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -67,41 +63,21 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Путь для сканирования";
             // 
-            // textBoxPathSave
-            // 
-            this.textBoxPathSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPathSave.Location = new System.Drawing.Point(14, 109);
-            this.textBoxPathSave.Margin = new System.Windows.Forms.Padding(5);
-            this.textBoxPathSave.Name = "textBoxPathSave";
-            this.textBoxPathSave.Size = new System.Drawing.Size(1015, 29);
-            this.textBoxPathSave.TabIndex = 3;
-            this.textBoxPathSave.TextChanged += new System.EventHandler(this.textBoxPathSave_TextChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 83);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(180, 21);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Путь для сохранения";
-            // 
             // RTextJournal
             // 
             this.RTextJournal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RTextJournal.Location = new System.Drawing.Point(16, 243);
+            this.RTextJournal.Location = new System.Drawing.Point(14, 185);
             this.RTextJournal.Name = "RTextJournal";
-            this.RTextJournal.Size = new System.Drawing.Size(1070, 231);
+            this.RTextJournal.Size = new System.Drawing.Size(1070, 289);
             this.RTextJournal.TabIndex = 6;
             this.RTextJournal.Text = "";
             // 
             // buttonGetFiles
             // 
             this.buttonGetFiles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonGetFiles.Location = new System.Drawing.Point(14, 206);
+            this.buttonGetFiles.Location = new System.Drawing.Point(14, 148);
             this.buttonGetFiles.Margin = new System.Windows.Forms.Padding(5);
             this.buttonGetFiles.Name = "buttonGetFiles";
             this.buttonGetFiles.Size = new System.Drawing.Size(243, 29);
@@ -110,44 +86,17 @@
             this.buttonGetFiles.UseVisualStyleBackColor = true;
             this.buttonGetFiles.Click += new System.EventHandler(this.button3_Click);
             // 
-            // buttonCopyFiles
-            // 
-            this.buttonCopyFiles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonCopyFiles.Location = new System.Drawing.Point(267, 206);
-            this.buttonCopyFiles.Margin = new System.Windows.Forms.Padding(5);
-            this.buttonCopyFiles.Name = "buttonCopyFiles";
-            this.buttonCopyFiles.Size = new System.Drawing.Size(243, 29);
-            this.buttonCopyFiles.TabIndex = 8;
-            this.buttonCopyFiles.Text = "Копировать";
-            this.buttonCopyFiles.UseVisualStyleBackColor = true;
-            this.buttonCopyFiles.Click += new System.EventHandler(this.button4_Click);
-            // 
             // checkBoxAutoRun
             // 
             this.checkBoxAutoRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxAutoRun.AutoSize = true;
-            this.checkBoxAutoRun.Location = new System.Drawing.Point(930, 152);
+            this.checkBoxAutoRun.Location = new System.Drawing.Point(932, 94);
             this.checkBoxAutoRun.Name = "checkBoxAutoRun";
             this.checkBoxAutoRun.Size = new System.Drawing.Size(154, 25);
             this.checkBoxAutoRun.TabIndex = 9;
             this.checkBoxAutoRun.Text = "Автозапуск ПО";
             this.checkBoxAutoRun.UseVisualStyleBackColor = true;
             this.checkBoxAutoRun.CheckedChanged += new System.EventHandler(this.checkBoxAutoRun_CheckedChanged);
-            // 
-            // buttonPathSave
-            // 
-            this.buttonPathSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPathSave.BackgroundImage = global::ManagerFile.Properties.Resources.save_go;
-            this.buttonPathSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.buttonPathSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonPathSave.Location = new System.Drawing.Point(1028, 109);
-            this.buttonPathSave.Margin = new System.Windows.Forms.Padding(5);
-            this.buttonPathSave.Name = "buttonPathSave";
-            this.buttonPathSave.Size = new System.Drawing.Size(56, 29);
-            this.buttonPathSave.TabIndex = 5;
-            this.buttonPathSave.Text = " ";
-            this.buttonPathSave.UseVisualStyleBackColor = true;
-            this.buttonPathSave.Click += new System.EventHandler(this.button2_Click);
             // 
             // buttonPathScan
             // 
@@ -166,7 +115,7 @@
             // buttonDeleteFiles
             // 
             this.buttonDeleteFiles.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonDeleteFiles.Location = new System.Drawing.Point(520, 206);
+            this.buttonDeleteFiles.Location = new System.Drawing.Point(267, 148);
             this.buttonDeleteFiles.Margin = new System.Windows.Forms.Padding(5);
             this.buttonDeleteFiles.Name = "buttonDeleteFiles";
             this.buttonDeleteFiles.Size = new System.Drawing.Size(243, 29);
@@ -178,15 +127,15 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 143);
+            this.label3.Location = new System.Drawing.Point(10, 85);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(281, 21);
+            this.label3.Size = new System.Drawing.Size(287, 21);
             this.label3.TabIndex = 11;
-            this.label3.Text = "Интервал сканирования (минуты)";
+            this.label3.Text = "Интервал сканирования (секунды)";
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(16, 167);
+            this.numericUpDown1.Location = new System.Drawing.Point(16, 109);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -217,7 +166,7 @@
             // 
             this.checkBoxSaveJurnal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxSaveJurnal.AutoSize = true;
-            this.checkBoxSaveJurnal.Location = new System.Drawing.Point(745, 152);
+            this.checkBoxSaveJurnal.Location = new System.Drawing.Point(747, 94);
             this.checkBoxSaveJurnal.Name = "checkBoxSaveJurnal";
             this.checkBoxSaveJurnal.Size = new System.Drawing.Size(179, 25);
             this.checkBoxSaveJurnal.TabIndex = 13;
@@ -235,12 +184,8 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonDeleteFiles);
             this.Controls.Add(this.checkBoxAutoRun);
-            this.Controls.Add(this.buttonCopyFiles);
             this.Controls.Add(this.buttonGetFiles);
             this.Controls.Add(this.RTextJournal);
-            this.Controls.Add(this.buttonPathSave);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBoxPathSave);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxPathScan);
             this.Controls.Add(this.buttonPathScan);
@@ -249,7 +194,7 @@
             this.Name = "Form1";
             this.Opacity = 0D;
             this.ShowIcon = false;
-            this.Text = "CopyFiles";
+            this.Text = "DeleteFiles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
@@ -263,12 +208,8 @@
         private System.Windows.Forms.Button buttonPathScan;
         private System.Windows.Forms.TextBox textBoxPathScan;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxPathSave;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button buttonPathSave;
         private System.Windows.Forms.RichTextBox RTextJournal;
         private System.Windows.Forms.Button buttonGetFiles;
-        private System.Windows.Forms.Button buttonCopyFiles;
         private System.Windows.Forms.CheckBox checkBoxAutoRun;
         private System.Windows.Forms.Button buttonDeleteFiles;
         private System.Windows.Forms.Label label3;

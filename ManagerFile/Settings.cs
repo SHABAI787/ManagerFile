@@ -69,7 +69,7 @@ namespace ManagerFile
             Settings settings = new Settings();
             settings.PathSave = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             settings.PathScan = null;
-            settings.Interval = 300000;
+            settings.Interval = 5000;
             settings.SaveJournal = false;
             settings.Save();
             return settings;
